@@ -31,8 +31,14 @@ killprocs = [
 	'lsregister',
 	'CVMCompiler',
 	'com.apple.ShareK',
+	'com.apple.NotesM',
+	'SandboxedService',
+	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',
+	# Seafile client
+	'seaf-daemon',
+	'ccnet',
 ]
 
 if len(sys.argv) > 1 and '--wait' not in sys.argv: # running from the LogoutHook
