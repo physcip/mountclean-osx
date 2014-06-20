@@ -35,10 +35,16 @@ killprocs = [
 	'dbfseventsd',
 ]
 
-if len(sys.argv) > 1: # running from the LogoutHook
+if len(sys.argv) > 1 and '--wait' not in sys.argv: # running from the LogoutHook
 	users = [sys.argv[1]]
+	subprocess.check_call(['/bin/launchctl', 'start', 'de.uni-stuttgart.physcip.mountclean'])
+	sys.exit()
 else:
 	users = os.listdir('/home')
+
+if len(users) > 0 and '--wait' in sys.argv: # deferred execution from LogoutHook
+	time.sleep(10)
+
 
 kill_users = []
 for user in users:

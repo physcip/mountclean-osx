@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>de.uni-stuttgart.physcip.mountclean</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/usr/local/bin/mountclean.py</string>
+		<string>--wait</string>
+	</array>
+	<key>StartInterval</key>
+	<integer>110</integer>
+</dict>
+</plist>
