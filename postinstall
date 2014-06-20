@@ -1,0 +1,3 @@
+#!/bin/bash
+
+launchctl load /Library/LaunchDaemons/de.uni-stuttgart.physcip.mountclean.plist

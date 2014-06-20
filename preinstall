@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if [ -f "/Library/LaunchDaemons/de.uni-stuttgart.physcip.mountclean.plist" ]; then
+	launchctl unload /Library/LaunchDaemons/de.uni-stuttgart.physcip.mountclean.plist
+fi
