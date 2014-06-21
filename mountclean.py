@@ -33,6 +33,11 @@ killprocs = [
 	'com.apple.ShareK',
 	'com.apple.NotesM',
 	'SandboxedService',
+	'com.apple.sbd',
+	'DataDetectorsDyn',
+	'com.apple.InputM',
+	'com.apple.NotesM',
+	'com.apple.iCloud',
 	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',
@@ -56,7 +61,7 @@ kill_users = []
 for user in users:
 	try:
 		ps = subprocess.check_output(['/bin/ps', '-xoucomm', '-u', user])
-	except CalledProcessError:
+	except subprocess.CalledProcessError:
 		log("No running processes for %s" % user)
 		kill_users.append(user)
 		continue
