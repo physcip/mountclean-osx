@@ -38,6 +38,7 @@ killprocs = [
 	'com.apple.InputM',
 	'com.apple.NotesM',
 	'com.apple.iCloud',
+	'com.apple.BKAgen',
 	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',

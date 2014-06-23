@@ -2,6 +2,10 @@ VER=$(shell git rev-list --count HEAD)
 IDENTIFIER=de.uni-stuttgart.physcip.mountclean
 SCRIPTNAME=mountclean.py
 
+mountclean-$(VER).dmg: mountclean.pkg
+	rm -f $@
+	hdiutil create -srcfolder $< $@
+
 mountclean.pkg: $(SCRIPTNAME) $(IDENTIFIER).plist postinstall preinstall
 	rm -rf pkgroot pkgscripts
 	mkdir pkgroot pkgscripts
@@ -28,3 +32,6 @@ uninstall:
 	
 	sudo launchctl unload /Library/LaunchDaemons/$(IDENTIFIER).plist
 	sudo rm /Library/LaunchDaemons/$(IDENTIFIER).plist
+
+clean:
+	rm -rf *.pkg *.dmg pkgroot pkgscripts
