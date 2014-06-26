@@ -14,6 +14,7 @@ mountclean.pkg: $(SCRIPTNAME) $(IDENTIFIER).plist postinstall preinstall
 	mkdir -p pkgroot/{Library/LaunchDaemons,usr/local/bin}
 	cp $(SCRIPTNAME) pkgroot/usr/local/bin
 	cp $(IDENTIFIER).plist pkgroot/Library/LaunchDaemons
+	xattr -cr pkgroot pkgscripts
 
 	pkgbuild --version $(VER) --scripts pkgscripts --root pkgroot --identifier $(IDENTIFIER) $@
 

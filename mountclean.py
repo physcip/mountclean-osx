@@ -39,12 +39,17 @@ killprocs = [
 	'com.apple.NotesM',
 	'com.apple.iCloud',
 	'com.apple.BKAgen',
+	'com.apple.appsto',
+	'com.apple.geod',
+	'com.apple.speech',
 	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',
 	# Seafile client
 	'seaf-daemon',
 	'ccnet',
+	# Steam games
+	'ipcserver',
 ]
 
 if len(sys.argv) > 1 and '--wait' not in sys.argv: # running from the LogoutHook
