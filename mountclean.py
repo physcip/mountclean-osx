@@ -42,6 +42,8 @@ killprocs = [
 	'com.apple.appsto',
 	'com.apple.geod',
 	'com.apple.speech',
+	'SSPasteboardHelp',
+	'com.apple.Charac',
 	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',
