@@ -1,4 +1,4 @@
-VER=$(shell git rev-list --count HEAD)
+VER=$(shell test -d .git && git rev-list --count HEAD || echo 0)
 IDENTIFIER=de.uni-stuttgart.physcip.mountclean
 SCRIPTNAME=mountclean.py
 
