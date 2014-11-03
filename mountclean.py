@@ -47,6 +47,7 @@ killprocs = [
 	'com.apple.audio.',
 	'com.apple.intern',
 	'com.apple.CoreSi',
+	'com.apple.hiserv'
 	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',
