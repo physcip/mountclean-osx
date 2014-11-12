@@ -48,6 +48,10 @@ killprocs = [
 	'com.apple.intern',
 	'com.apple.CoreSi',
 	'com.apple.hiserv'
+	# new in Yosemite
+	'iCloudAccountsMi',
+	'pkd',
+	'secinitd',
 	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',
