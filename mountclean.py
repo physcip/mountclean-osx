@@ -47,7 +47,8 @@ killprocs = [
 	'com.apple.audio.',
 	'com.apple.intern',
 	'com.apple.CoreSi',
-	'com.apple.hiserv'
+	'com.apple.hiserv',
+	'mdworker32',
 	# new in Yosemite
 	'iCloudAccountsMi',
 	'pkd',
