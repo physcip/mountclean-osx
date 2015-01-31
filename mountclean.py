@@ -53,9 +53,11 @@ killprocs = [
 	'iCloudAccountsMi',
 	'pkd',
 	'secinitd',
+	'findNames',
 	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',
+	'Dropbox109',
 	# Seafile client
 	'seaf-daemon',
 	'ccnet',
