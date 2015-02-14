@@ -54,6 +54,7 @@ killprocs = [
 	'pkd',
 	'secinitd',
 	'findNames',
+	'com.apple.CloudP',
 	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',
