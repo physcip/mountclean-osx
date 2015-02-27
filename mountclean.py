@@ -55,6 +55,9 @@ killprocs = [
 	'secinitd',
 	'findNames',
 	'com.apple.CloudP',
+	'pluginkit',
+	'ssh-agent',
+	'com.apple.Speech',
 	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',
