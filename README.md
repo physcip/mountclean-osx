@@ -23,3 +23,14 @@ We are not aware of any side effects other than being unable to mount your home 
 	</td></tr>
 	<tr><th>NFSHomeDirectory</th><td>/home/USER</td></tr>
 </table>
+
+Installation
+------------
+You can either clone this repository and run `make install`, or download a [pre-built installer package](https://github.com/mkuron/mountclean-osx/releases). The installer package does not include the LoginHook, which does not work reliably anyway. If the downloadable installer is not up-to-date with the latest commit, you can build the installer yourself by running `make`.
+
+Troubleshooting
+---------------
+Good places to look when things don't work as expected are:
+- Mounted home directories: `ls /home`
+- Running processes: `ps axu | grep -v '^root\|^_'`
+- Log output written by mountclean: `grep mountclean /var/log/system.log`
