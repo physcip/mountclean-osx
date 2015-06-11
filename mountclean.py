@@ -58,6 +58,14 @@ killprocs = [
 	'pluginkit',
 	'ssh-agent',
 	'com.apple.Speech',
+	'sharingd',
+	'lsuseractivityd',
+	'crashpad_helper',
+	'Google Chrome He',
+	'LaterAgent',
+	'VTDecoderXPCServ',
+	# new in El Capitan
+	'com.apple.Addres',
 	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',
