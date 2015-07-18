@@ -64,6 +64,8 @@ killprocs = [
 	'Google Chrome He',
 	'LaterAgent',
 	'VTDecoderXPCServ',
+	'crashpad_handler',
+	'diskimages-helpe',
 	# new in El Capitan
 	'com.apple.Addres',
 	# Dropbox client
