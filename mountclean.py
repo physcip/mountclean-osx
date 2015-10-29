@@ -66,8 +66,11 @@ killprocs = [
 	'VTDecoderXPCServ',
 	'crashpad_handler',
 	'diskimages-helpe',
+	'com.apple.lakitu',
+	'crashreporter',
 	# new in El Capitan
 	'com.apple.Addres',
+	'GPUToolsAgent',
 	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',
