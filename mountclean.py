@@ -71,6 +71,8 @@ killprocs = [
 	# new in El Capitan
 	'com.apple.Addres',
 	'GPUToolsAgent',
+	'com.apple.MailSe',
+	'com.apple.spotli',
 	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',
