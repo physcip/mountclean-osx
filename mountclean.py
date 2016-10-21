@@ -73,6 +73,12 @@ killprocs = [
 	'GPUToolsAgent',
 	'com.apple.MailSe',
 	'com.apple.spotli',
+	'nsurlstoraged',
+	# new in Sierra
+	'trustd',
+	'lsd',
+	'com.apple.Dictio',
+	'CalNCService',
 	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',
@@ -106,7 +112,7 @@ for user in users:
 	ps = ps.splitlines()
 	ps = [p.strip() for p in ps[1:]]
 	extraps = set(ps)-set(killprocs)
-	log("%d processes still running: %s" % (len(extraps), ", ".join(extraps)))
+	log("%d processes still running for %s: %s" % (len(extraps), user, ", ".join(extraps)))
 	
 	if len(extraps) == 0:
 		kill_users.append(user)
