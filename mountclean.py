@@ -79,6 +79,8 @@ killprocs = [
 	'lsd',
 	'com.apple.Dictio',
 	'CalNCService',
+	'languageassetd',
+	'com.apple.access',
 	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',
