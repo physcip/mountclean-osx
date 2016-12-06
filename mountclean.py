@@ -74,6 +74,7 @@ killprocs = [
 	'com.apple.MailSe',
 	'com.apple.spotli',
 	'nsurlstoraged',
+	'DataclassOwnersM',
 	# new in Sierra
 	'trustd',
 	'lsd',
