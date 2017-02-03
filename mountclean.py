@@ -82,6 +82,7 @@ killprocs = [
 	'CalNCService',
 	'languageassetd',
 	'com.apple.access',
+	'DiskSpaceEfficie',
 	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',
