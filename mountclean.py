@@ -128,6 +128,14 @@ if len(kill_users) > 0:
 	for user in kill_users:
 		log("Killing leftover processes for %s" % user)
 		subprocess.call(['/usr/bin/killall', '-9', '-u', user])
+
+	if int(os.uname()[2].split('.')[0]) >= 15: # launchctl bootout was introduced by macOS 10.11
+		time.sleep(1)
+		for user in kill_users:
+			subprocess.call(['/bin/launchctl', 'bootout', 'user/' + user])
+
+	time.sleep(1)
+	for user in kill_users:
 		homedir = '/home/' + user
 		if os.path.exists(homedir):
 			log("Unmounting homedir for %s" % user)
