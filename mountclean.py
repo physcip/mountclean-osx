@@ -5,6 +5,7 @@ import sys
 import os
 import time
 import syslog
+import pwd
 
 syslog.openlog(ident=os.path.basename(sys.argv[0]), facility=syslog.LOG_AUTH)
 def log(msg):
@@ -120,6 +121,18 @@ for user in users:
 	
 	if len(extraps) == 0:
 		kill_users.append(user)
+
+		if int(os.uname()[2].split('.')[0]) >= 15: # launchctl bootout was introduced by macOS 10.11
+			log("Shutting down launchd user domain")
+			subprocess.call(['/bin/launchctl', 'bootout', 'user/' + user])
+		else:
+			log("Shutting down launchd per-user bootstrap")
+			uid = pwd.getpwnam(user).pw_uid
+			subprocess.call(['/bin/launchctl', 'remove', 'com.apple.launchd.peruser.' + str(uid)])
+
+if len(kill_users) > 0:
+	time.sleep(2)
+	for user in kill_users:
 		log("Killing processes for %s" % user)
 		subprocess.call(['/usr/bin/killall', '-u', user])
 
@@ -128,11 +141,6 @@ if len(kill_users) > 0:
 	for user in kill_users:
 		log("Killing leftover processes for %s" % user)
 		subprocess.call(['/usr/bin/killall', '-9', '-u', user])
-
-	if int(os.uname()[2].split('.')[0]) >= 15: # launchctl bootout was introduced by macOS 10.11
-		time.sleep(1)
-		for user in kill_users:
-			subprocess.call(['/bin/launchctl', 'bootout', 'user/' + user])
 
 	time.sleep(1)
 	for user in kill_users:
