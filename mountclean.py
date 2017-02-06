@@ -122,12 +122,12 @@ for user in users:
 	if len(extraps) == 0:
 		kill_users.append(user)
 
+		uid = pwd.getpwnam(user).pw_uid
 		if int(os.uname()[2].split('.')[0]) >= 15: # launchctl bootout was introduced by macOS 10.11
 			log("Shutting down launchd user domain")
-			subprocess.call(['/bin/launchctl', 'bootout', 'user/' + user])
+			subprocess.call(['/bin/launchctl', 'bootout', 'user/' + str(uid)])
 		else:
 			log("Shutting down launchd per-user bootstrap")
-			uid = pwd.getpwnam(user).pw_uid
 			subprocess.call(['/bin/launchctl', 'remove', 'com.apple.launchd.peruser.' + str(uid)])
 
 if len(kill_users) > 0:
