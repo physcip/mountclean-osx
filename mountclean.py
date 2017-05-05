@@ -84,10 +84,12 @@ killprocs = [
 	'languageassetd',
 	'com.apple.access',
 	'DiskSpaceEfficie',
+	'MTLCompilerServi',
 	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',
 	'Dropbox109',
+	'DropboxMacUpdate',
 	# Seafile client
 	'seaf-daemon',
 	'ccnet',
