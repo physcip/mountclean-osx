@@ -85,6 +85,9 @@ killprocs = [
 	'com.apple.access',
 	'DiskSpaceEfficie',
 	'MTLCompilerServi',
+	'RdrCEF',
+	'RdrCEF Helper',
+	'com.apple.toneli',
 	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',
@@ -150,4 +153,8 @@ if len(kill_users) > 0:
 		if os.path.exists(homedir):
 			log("Unmounting homedir for %s" % user)
 			subprocess.call(['/sbin/umount', '-f', homedir])
-	
+
+	# The LaunchServices database may contain references to apps in user home.
+	# This may lead to automount storms when reading the database, like Munki does when reporting installed apps.
+	log("Resetting LaunchServices database")
+	subprocess.call(["/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister", "-kill", "-r", "-domain", "local", "-domain", "system", "-domain", "user"])
