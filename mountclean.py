@@ -37,7 +37,6 @@ killprocs = [
 	'com.apple.sbd',
 	'DataDetectorsDyn',
 	'com.apple.InputM',
-	'com.apple.NotesM',
 	'com.apple.iCloud',
 	'com.apple.BKAgen',
 	'com.apple.appsto',
@@ -88,11 +87,16 @@ killprocs = [
 	'RdrCEF',
 	'RdrCEF Helper',
 	'com.apple.toneli',
+	# new in High Sierra
+	'com.apple.Safari',
+	'ContextService',
+	'com.apple.Notes.',
 	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',
 	'Dropbox109',
 	'DropboxMacUpdate',
+	'DropboxFolderTag',
 	# Seafile client
 	'seaf-daemon',
 	'ccnet',
