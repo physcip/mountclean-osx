@@ -6,6 +6,7 @@ import os
 import time
 import syslog
 import pwd
+import re
 
 syslog.openlog(ident=os.path.basename(sys.argv[0]), facility=syslog.LOG_AUTH)
 def log(msg):
@@ -134,10 +135,38 @@ for user in users:
 		uid = pwd.getpwnam(user).pw_uid
 		if int(os.uname()[2].split('.')[0]) >= 15: # launchctl bootout was introduced by macOS 10.11
 			log("Shutting down launchd user domain")
+			try:
+				subprocess.call(['/bin/launchctl', 'bootout', 'gui/' + str(uid)])
+			except subprocess.CalledProcessError:
+				pass
 			subprocess.call(['/bin/launchctl', 'bootout', 'user/' + str(uid)])
 		else:
 			log("Shutting down launchd per-user bootstrap")
 			subprocess.call(['/bin/launchctl', 'remove', 'com.apple.launchd.peruser.' + str(uid)])
+
+if len(kill_users) > 0:
+	time.sleep(2)
+	for user in kill_users:
+		log("Removing launch daemons for %s" % user)
+		uid = pwd.getpwnam(user).pw_uid
+		try:
+			lines1 = subprocess.check_output(['/bin/launchctl', 'print', 'gui/%d' % uid])
+		except subprocess.CalledProcessError:
+			lines1 = ""
+		try:
+			lines2 = subprocess.check_output(['/bin/launchctl', 'print', 'user/%d' % uid])
+		except subprocess.CalledProcessError:
+			lines2 = ""
+		lines = lines1 + "\n" + lines2
+		
+		for line in lines.split('\n'):
+			if not re.match('\s+[1-9]', line):
+				continue
+			line = line.split()
+			try:
+				subprocess.check_output(['/bin/launchctl', 'remove', line[2]])
+			except subprocess.CalledProcessError:
+				pass
 
 if len(kill_users) > 0:
 	time.sleep(2)
