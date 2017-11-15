@@ -134,39 +134,34 @@ for user in users:
 
 		uid = pwd.getpwnam(user).pw_uid
 		if int(os.uname()[2].split('.')[0]) >= 15: # launchctl bootout was introduced by macOS 10.11
-			log("Shutting down launchd user domain")
-			try:
-				subprocess.call(['/bin/launchctl', 'bootout', 'gui/' + str(uid)])
-			except subprocess.CalledProcessError:
-				pass
-			subprocess.call(['/bin/launchctl', 'bootout', 'user/' + str(uid)])
+			for domain in ['gui', 'user']:
+				log("Shutting down launchd " + domain + " domain")
+				try:
+					subprocess.call(['/bin/launchctl', 'bootout', domain + '/' + str(uid)])
+				except subprocess.CalledProcessError:
+					print "No " + domain + " session found"
 		else:
 			log("Shutting down launchd per-user bootstrap")
 			subprocess.call(['/bin/launchctl', 'remove', 'com.apple.launchd.peruser.' + str(uid)])
 
-if len(kill_users) > 0:
+if len(kill_users) > 0 and int(os.uname()[2].split('.')[0]) >= 15:
 	time.sleep(2)
 	for user in kill_users:
-		log("Removing launch daemons for %s" % user)
 		uid = pwd.getpwnam(user).pw_uid
-		try:
-			lines1 = subprocess.check_output(['/bin/launchctl', 'print', 'gui/%d' % uid])
-		except subprocess.CalledProcessError:
-			lines1 = ""
-		try:
-			lines2 = subprocess.check_output(['/bin/launchctl', 'print', 'user/%d' % uid])
-		except subprocess.CalledProcessError:
-			lines2 = ""
-		lines = lines1 + "\n" + lines2
-		
-		for line in lines.split('\n'):
-			if not re.match('\s+[1-9]', line):
-				continue
-			line = line.split()
+		for domain in ["gui", "user"]:
+			log("Removing launch daemons for %s's %s domain" % (user,domain))
 			try:
-				subprocess.check_output(['/bin/launchctl', 'remove', line[2]])
-			except subprocess.CalledProcessError:
-				pass
+				lines = subprocess.check_output(['/bin/launchctl', 'print', '%s/%d' % (domain,uid)])
+			except:
+				continue
+		
+			for line in lines.split('\n'):
+				if not re.match('\s+[1-9]', line):
+					continue
+				line = line.split()
+				service = '%s/%d/%s' % (domain, user, line[2])
+				subprocess.call(['/bin/launchctl', 'bootout', service])
+				print "Removed " + service
 
 if len(kill_users) > 0:
 	time.sleep(2)
