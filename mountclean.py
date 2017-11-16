@@ -105,7 +105,7 @@ killprocs = [
 	'ipcserver',
 ]
 
-def get_killable_users():
+def get_killable_users_by_mount():
 	users = os.listdir('/home')
 	kill_users = []
 	for user in users:
@@ -123,6 +123,26 @@ def get_killable_users():
 		if len(extraps) == 0:
 			kill_users.append(user)
 	return kill_users
+
+def get_killable_users_by_launchd():
+	if int(os.uname()[2].split('.')[0]) < 15:
+		return
+
+	mounted = os.listdir('/home')
+
+	users = []
+	lines = subprocess.check_output(['/bin/launchctl', 'print', 'system'])
+	for line in lines.split('\n'):
+		result = re.match('\s+com.apple.xpc.launchd.domain.user.([0-9]{4,})$', line)
+		if not result:
+			continue
+		uid = int(result.group(1))
+		user = pwd.getpwuid(uid).pw_name
+		log("Found user domain for %s" % user)
+		if user not in mounted:
+			users.append(user)
+
+	return users
 
 def kill(users):
 	if len(users) == 0:
@@ -159,6 +179,12 @@ def kill(users):
 					service = '%s/%d/%s' % (domain, user, line[2])
 					subprocess.call(['/bin/launchctl', 'bootout', service])
 					print "Removed " + service
+
+				log("Shutting down launchd " + domain + " domain")
+				try:
+					subprocess.call(['/bin/launchctl', 'bootout', domain + '/' + str(uid)])
+				except subprocess.CalledProcessError:
+					print "No " + domain + " session found"
 	
 	time.sleep(2)
 	for user in users:
@@ -188,10 +214,12 @@ def unmount(users):
 		subprocess.call(["/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister", "-kill", "-r", "-domain", "local", "-domain", "system", "-domain", "user"])
 
 if __name__ == "__main__":
-	users = set(get_killable_users())
+	users_mounted = set(get_killable_users_by_mount())
+	users_launchd = set(get_killable_users_by_launchd())
+	users = users_mounted.union(users_launchd)
 	for arg in sys.argv[1:]:
 		if not arg.startswith('-'):
 			users = users.intersection(sys.argv[1:])
 			break
 	kill(users)
-	unmount(users)
+	unmount(users_mounted)
