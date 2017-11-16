@@ -220,6 +220,7 @@ if __name__ == "__main__":
 	for arg in sys.argv[1:]:
 		if not arg.startswith('-'):
 			users = users.intersection(sys.argv[1:])
+			users_mounted = users_mounted.intersection(sys.argv[1:])
 			break
 	kill(users)
 	unmount(users_mounted)
