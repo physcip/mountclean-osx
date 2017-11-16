@@ -105,33 +105,30 @@ killprocs = [
 	'ipcserver',
 ]
 
-if len(sys.argv) > 1 and '--wait' not in sys.argv: # running from the LogoutHook
-	users = [sys.argv[1]]
-	subprocess.check_call(['/bin/launchctl', 'start', 'de.uni-stuttgart.physcip.mountclean'])
-	sys.exit()
-else:
+def get_killable_users():
 	users = os.listdir('/home')
+	kill_users = []
+	for user in users:
+		try:
+			ps = subprocess.check_output(['/bin/ps', '-xoucomm', '-u', user])
+		except subprocess.CalledProcessError:
+			log("No running processes for %s" % user)
+			kill_users.append(user)
+			continue
+		ps = ps.splitlines()
+		ps = [p.strip() for p in ps[1:]]
+		extraps = set(ps)-set(killprocs)
+		log("%d processes still running for %s: %s" % (len(extraps), user, ", ".join(extraps)))
+		
+		if len(extraps) == 0:
+			kill_users.append(user)
+	return kill_users
 
-if len(users) > 0 and '--wait' in sys.argv: # deferred execution from LogoutHook
-	time.sleep(10)
+def kill(users):
+	if len(users) == 0:
+		return
 
-
-kill_users = []
-for user in users:
-	try:
-		ps = subprocess.check_output(['/bin/ps', '-xoucomm', '-u', user])
-	except subprocess.CalledProcessError:
-		log("No running processes for %s" % user)
-		kill_users.append(user)
-		continue
-	ps = ps.splitlines()
-	ps = [p.strip() for p in ps[1:]]
-	extraps = set(ps)-set(killprocs)
-	log("%d processes still running for %s: %s" % (len(extraps), user, ", ".join(extraps)))
-	
-	if len(extraps) == 0:
-		kill_users.append(user)
-
+	for user in users:
 		uid = pwd.getpwnam(user).pw_uid
 		if int(os.uname()[2].split('.')[0]) >= 15: # launchctl bootout was introduced by macOS 10.11
 			for domain in ['gui', 'user']:
@@ -144,45 +141,57 @@ for user in users:
 			log("Shutting down launchd per-user bootstrap")
 			subprocess.call(['/bin/launchctl', 'remove', 'com.apple.launchd.peruser.' + str(uid)])
 
-if len(kill_users) > 0 and int(os.uname()[2].split('.')[0]) >= 15:
-	time.sleep(2)
-	for user in kill_users:
-		uid = pwd.getpwnam(user).pw_uid
-		for domain in ["gui", "user"]:
-			log("Removing launch daemons for %s's %s domain" % (user,domain))
-			try:
-				lines = subprocess.check_output(['/bin/launchctl', 'print', '%s/%d' % (domain,uid)])
-			except:
-				continue
-		
-			for line in lines.split('\n'):
-				if not re.match('\s+[1-9]', line):
+	if int(os.uname()[2].split('.')[0]) >= 15:
+		time.sleep(2)
+		for user in users:
+			uid = pwd.getpwnam(user).pw_uid
+			for domain in ["gui", "user"]:
+				log("Removing launch daemons for %s's %s domain" % (user,domain))
+				try:
+					lines = subprocess.check_output(['/bin/launchctl', 'print', '%s/%d' % (domain,uid)])
+				except:
 					continue
-				line = line.split()
-				service = '%s/%d/%s' % (domain, user, line[2])
-				subprocess.call(['/bin/launchctl', 'bootout', service])
-				print "Removed " + service
-
-if len(kill_users) > 0:
+			
+				for line in lines.split('\n'):
+					if not re.match('\s+[1-9]', line):
+						continue
+					line = line.split()
+					service = '%s/%d/%s' % (domain, user, line[2])
+					subprocess.call(['/bin/launchctl', 'bootout', service])
+					print "Removed " + service
+	
 	time.sleep(2)
-	for user in kill_users:
-		log("Killing processes for %s" % user)
+	for user in users:
+		log("Terminating processes for %s" % user)
 		subprocess.call(['/usr/bin/killall', '-u', user])
 
-if len(kill_users) > 0:
 	time.sleep(2)
-	for user in kill_users:
+	for user in users:
 		log("Killing leftover processes for %s" % user)
 		subprocess.call(['/usr/bin/killall', '-9', '-u', user])
 
 	time.sleep(1)
-	for user in kill_users:
+
+def unmount(users):
+	count = 0
+	for user in users:
 		homedir = '/home/' + user
 		if os.path.exists(homedir):
 			log("Unmounting homedir for %s" % user)
 			subprocess.call(['/sbin/umount', '-f', homedir])
+			count += 1
 
-	# The LaunchServices database may contain references to apps in user home.
-	# This may lead to automount storms when reading the database, like Munki does when reporting installed apps.
-	log("Resetting LaunchServices database")
-	subprocess.call(["/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister", "-kill", "-r", "-domain", "local", "-domain", "system", "-domain", "user"])
+	if count > 0:
+		# The LaunchServices database may contain references to apps in user home.
+		# This may lead to automount storms when reading the database, like Munki does when reporting installed apps.
+		log("Resetting LaunchServices database")
+		subprocess.call(["/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister", "-kill", "-r", "-domain", "local", "-domain", "system", "-domain", "user"])
+
+if __name__ == "__main__":
+	users = set(get_killable_users())
+	for arg in sys.argv[1:]:
+		if not arg.startswith('-'):
+			users = users.intersection(sys.argv[1:])
+			break
+	kill(users)
+	unmount(users)
