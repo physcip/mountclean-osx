@@ -166,31 +166,6 @@ def kill(users):
 			log("Shutting down launchd per-user bootstrap")
 			subprocess.call(['/bin/launchctl', 'remove', 'com.apple.launchd.peruser.' + str(uid)])
 
-#	if int(os.uname()[2].split('.')[0]) >= 15:
-#		time.sleep(2)
-#		for user in users:
-#			uid = pwd.getpwnam(user).pw_uid
-#			for domain in ["gui", "user"]:
-#				log("Removing launch daemons for %s's %s domain" % (user,domain))
-#				try:
-#					lines = subprocess.check_output(['/bin/launchctl', 'print', '%s/%d' % (domain,uid)])
-#				except:
-#					continue
-#			
-#				for line in lines.split('\n'):
-#					if not re.match('\s+[1-9]', line):
-#						continue
-#					line = line.split()
-#					service = '%s/%d/%s' % (domain, user, line[2])
-#					subprocess.call(['/bin/launchctl', 'bootout', service])
-#					print "Removed " + service
-#
-#				log("Shutting down launchd " + domain + " domain")
-#				try:
-#					subprocess.call(['/bin/launchctl', 'bootout', domain + '/' + str(uid)])
-#				except subprocess.CalledProcessError:
-#					print "No " + domain + " session found"
-	
 	time.sleep(2)
 	for user in users:
 		log("Terminating processes for %s" % user)
