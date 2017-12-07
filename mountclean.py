@@ -105,11 +105,6 @@ killprocs = [
 	'ipcserver',
 ]
 
-# Users whose processes will never be killed
-ignoreusers = [
-    'physreg'
-]
-
 def get_killable_users_by_mount():
 	users = os.listdir('/home')
 	kill_users = []
@@ -143,8 +138,10 @@ def get_killable_users_by_launchd():
 			continue
 		uid = int(result.group(1))
 		user = pwd.getpwuid(uid).pw_name
+		homedir = pwd.getpwuid(uid).pw_dir
 		log("Found user domain for %s" % user)
-		if user not in mounted:
+
+		if homedir.startswith('/home') and user not in mounted:
 			users.append(user)
 
 	return users
@@ -197,7 +194,6 @@ if __name__ == "__main__":
 	users_mounted = set(get_killable_users_by_mount())
 	users_launchd = set(get_killable_users_by_launchd())
 	users = users_mounted.union(users_launchd)
-	users = users - set(ignoreusers)
 	for arg in sys.argv[1:]:
 		if not arg.startswith('-'):
 			users = users.intersection(sys.argv[1:])
