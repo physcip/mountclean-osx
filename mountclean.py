@@ -92,6 +92,7 @@ killprocs = [
 	'com.apple.Safari',
 	'ContextService',
 	'com.apple.Notes.',
+	'ctkd',
 	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',
