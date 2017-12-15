@@ -22,14 +22,12 @@ install: $(SCRIPTNAME) $(IDENTIFIER).plist
 	sudo cp $(SCRIPTNAME) /usr/local/bin
 	sudo chown root:wheel /usr/local/bin/$(SCRIPTNAME)
 	sudo chmod go-w /usr/local/bin/$(SCRIPTNAME)
-	sudo defaults write com.apple.loginwindow LogoutHook /usr/local/bin/$(SCRIPTNAME)
 	
 	sudo cp $(IDENTIFIER).plist /Library/LaunchDaemons
 	sudo launchctl load /Library/LaunchDaemons/$(IDENTIFIER).plist
 
 uninstall:
 	sudo rm /usr/local/bin/mountclean*
-	sudo defaults delete com.apple.loginwindow LogoutHook
 	
 	sudo launchctl unload /Library/LaunchDaemons/$(IDENTIFIER).plist
 	sudo rm /Library/LaunchDaemons/$(IDENTIFIER).plist
