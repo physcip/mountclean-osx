@@ -127,7 +127,7 @@ def get_killable_users_by_mount():
 
 def get_killable_users_by_launchd():
 	if int(os.uname()[2].split('.')[0]) < 15:
-		return
+		return []
 
 	mounted = os.listdir('/home')
 
