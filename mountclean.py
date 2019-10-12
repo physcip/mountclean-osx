@@ -93,6 +93,7 @@ killprocs = [
 	'ContextService',
 	'com.apple.Notes.',
 	'ctkd',
+	'AlertNotificatio',
 	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',
