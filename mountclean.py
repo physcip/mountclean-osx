@@ -94,6 +94,10 @@ killprocs = [
 	'com.apple.Notes.',
 	'ctkd',
 	'AlertNotificatio',
+	# new in mojave
+        'SafeEjectGPUServ',
+        'coreauthd',
+        'mdworker_shared',
 	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',
