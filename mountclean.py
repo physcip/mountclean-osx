@@ -109,6 +109,9 @@ killprocs = [
 	'ccnet',
 	# Steam games
 	'ipcserver',
+	'mdbulkimport',
+	'containermanager',
+	'PlugInLibrarySer'
 ]
 
 def get_killable_users_by_mount():
