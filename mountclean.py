@@ -98,6 +98,9 @@ killprocs = [
         'SafeEjectGPUServ',
         'coreauthd',
         'mdworker_shared',
+	# new in Monterey
+	'fileproviderd',
+	'csnameddatad',
 	# Dropbox client
 	'Dropbox',
 	'dbfseventsd',
